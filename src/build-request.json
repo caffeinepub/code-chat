@@ -1,0 +1,110 @@
+{
+  "kind": "build_request",
+  "title": "Create one-to-one chat website with unique code-based connections",
+  "projectName": "Code Chat",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Create a user registration system that generates a unique numeric code for each user upon signup",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "unique code nunber"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Each user receives a unique numeric code upon registration",
+        "Code is displayed to the user after successful registration",
+        "Code can be used to identify and connect with the user"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Implement a connection system where users can find and connect with other users by entering their unique code number",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "chating one to one with people with there unique code nunber"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Users can enter another user's code to initiate a connection",
+        "System validates the entered code exists",
+        "Connection is established only between two specific users"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Build a one-to-one chat interface where connected users can send and receive text messages in real-time",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "we can chat and do conversation with people one to one"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Users can send text messages to their connected partner",
+        "Messages appear in a conversation thread format",
+        "Chat history is preserved and retrievable",
+        "Only the two connected users can see their conversation"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Design a modern, user-friendly chat interface with a clean messaging aesthetic using warm, inviting colors like coral and teal, rounded message bubbles, and clear visual hierarchy for sender/receiver messages",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Chat interface uses a cohesive color scheme with warm accent colors",
+        "Message bubbles are clearly distinguishable between sender and receiver",
+        "Interface is responsive and works on different screen sizes",
+        "Typography is legible and user-friendly"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Display the user's own unique code prominently in the interface so they can share it with others",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ]
+      },
+      "acceptanceCriteria": [
+        "User's unique code is visible in the main interface",
+        "Code can be easily copied for sharing",
+        "Code display is clearly labeled"
+      ]
+    }
+  ],
+  "constraints": [
+    "Use Internet Identity for user authentication instead of custom username/password system",
+    "Chat messages must be stored persistently in the backend",
+    "System must use polling for message updates since real-time WebSocket connections are not supported"
+  ],
+  "nonGoals": [
+    "Group chat functionality",
+    "Voice or video calling features",
+    "File or image sharing in chat",
+    "Push notifications",
+    "User profile customization beyond the unique code"
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

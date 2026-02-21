@@ -1,0 +1,21 @@
+{
+  "backend/main.mo": "Motoko actor implementing user registration with unique numeric IDs, user-to-user connections stored bidirectionally, and query functions to retrieve all users and check connection status between two users.",
+  "feature_evidence.json": "Feature evidence report documenting five implemented features: user registration with unique codes, connection system, one-to-one chat interface, modern UI design with coral/teal colors, and prominent code display.",
+  "frontend-file-summaries.txt": "JSON-formatted summaries of frontend files including routing, React Query hooks, pages for landing/register/connect/chat, header/footer components, and styling configuration.",
+  "frontend/index.css": "Tailwind CSS base styles with OKLCH color system defining CSS custom properties for light and dark themes, including background, foreground, primary, secondary, and chart colors.",
+  "frontend/index.html": "HTML entry point with UTF-8 charset, viewport meta tag, 'Code Chat' title, root div, and module script loading main.tsx.",
+  "frontend/src/App.tsx": "TanStack Router setup defining root layout with header/footer and four routes (landing, register, connect, chat) with typed router declaration.",
+  "frontend/src/components/Footer.tsx": "Footer component displaying copyright, caffeine.ai attribution with UTM tracking, and social media links for Twitter and GitHub.",
+  "frontend/src/components/Header.tsx": "Header component with logo, navigation links (Register, Connect, Chat), and Internet Identity login/logout functionality with conditional rendering based on authentication state.",
+  "frontend/src/hooks/useActor.ts": "React Query hook managing backend actor creation with Internet Identity authentication, automatically invalidating dependent queries when identity changes.",
+  "frontend/src/hooks/useInternetIdentity.ts": "React context provider and hook for Internet Identity authentication, managing login status, identity state, and AuthClient lifecycle with configurable options.",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks wrapping backend actor methods for user registration, connection establishment, fetching all users, and checking connection status between two users.",
+  "frontend/src/index.css": "Tailwind CSS configuration with custom CSS variables for light/dark themes using OKLCH color space, including custom coral and teal color utilities.",
+  "frontend/src/main.tsx": "Application entry point that sets up React Query and Internet Identity providers, then renders the root App component.",
+  "frontend/src/pages/ChatPage.tsx": "Chat page component that requires authentication and displays a placeholder UI indicating the chat feature is under development and needs backend integration.",
+  "frontend/src/pages/ConnectPage.tsx": "Page for connecting two users by entering their unique codes, with authentication check and success state that redirects to chat.",
+  "frontend/src/pages/LandingPage.tsx": "Marketing landing page showcasing the app's features (unique codes, one-to-one chat, security) with a call-to-action button that triggers login or navigation to registration.",
+  "frontend/src/pages/RegisterPage.tsx": "User registration page that creates a new user with a display name, generates a unique numeric code, and provides UI to copy and share the code.",
+  "frontend/tailwind.config.js": "Tailwind configuration extending the default theme with custom OKLCH colors, container settings, border radius variables, and animation keyframes for UI components.",
+  "project_state.json": "Project configuration for a one-to-one chat website where users connect via unique numeric codes. Tracks five existing features (user registration, connection system, real-time chat, UI design, code display) and four pending feature requests for authentication, code generation, connections, and chat functionality."
+}
