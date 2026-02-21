@@ -10,10 +10,12 @@ import { IDL } from '@icp-sdk/core/candid';
 
 export const User = IDL.Record({
   'principal' : IDL.Principal,
+  'authCode' : IDL.Text,
   'displayName' : IDL.Text,
 });
 
 export const idlService = IDL.Service({
+  'authenticateWithCode' : IDL.Func([IDL.Text], [IDL.Nat], []),
   'connectUsers' : IDL.Func([IDL.Nat, IDL.Nat], [], []),
   'getAllUsers' : IDL.Func([], [IDL.Vec(User)], ['query']),
   'isConnected' : IDL.Func([IDL.Nat, IDL.Nat], [IDL.Bool], ['query']),
@@ -25,10 +27,12 @@ export const idlInitArgs = [];
 export const idlFactory = ({ IDL }) => {
   const User = IDL.Record({
     'principal' : IDL.Principal,
+    'authCode' : IDL.Text,
     'displayName' : IDL.Text,
   });
   
   return IDL.Service({
+    'authenticateWithCode' : IDL.Func([IDL.Text], [IDL.Nat], []),
     'connectUsers' : IDL.Func([IDL.Nat, IDL.Nat], [], []),
     'getAllUsers' : IDL.Func([], [IDL.Vec(User)], ['query']),
     'isConnected' : IDL.Func([IDL.Nat, IDL.Nat], [IDL.Bool], ['query']),

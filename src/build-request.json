@@ -1,107 +1,116 @@
 {
   "kind": "build_request",
-  "title": "Create one-to-one chat website with unique code-based connections",
+  "title": "Implement code-only authentication system with persistent login",
   "projectName": "Code Chat",
-  "priority": "normal",
+  "priority": "high",
   "requirements": [
     {
-      "id": "REQ-1",
-      "text": "Create a user registration system that generates a unique numeric code for each user upon signup",
-      "target": "both",
+      "id": "REQ-6",
+      "text": "Modify the backend to store user sessions that map unique codes to user identities, allowing users to authenticate by entering only their unique code without requiring Internet Identity login after initial registration",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-user-code-requirements"
         ],
         "quotes": [
-          "unique code nunber"
+          "there will be a unique customur code only one time by useing this code a people can access this side and chat just entering the single code and start chart nothing more"
         ]
       },
       "acceptanceCriteria": [
-        "Each user receives a unique numeric code upon registration",
-        "Code is displayed to the user after successful registration",
-        "Code can be used to identify and connect with the user"
+        "Backend stores a mapping between unique numeric codes and user identities",
+        "Users can authenticate by providing only their unique code",
+        "No password or Internet Identity verification required after initial registration",
+        "Authentication persists across devices when using the same unique code"
       ]
     },
     {
-      "id": "REQ-2",
-      "text": "Implement a connection system where users can find and connect with other users by entering their unique code number",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "chating one to one with people with there unique code nunber"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Users can enter another user's code to initiate a connection",
-        "System validates the entered code exists",
-        "Connection is established only between two specific users"
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "text": "Build a one-to-one chat interface where connected users can send and receive text messages in real-time",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "we can chat and do conversation with people one to one"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Users can send text messages to their connected partner",
-        "Messages appear in a conversation thread format",
-        "Chat history is preserved and retrievable",
-        "Only the two connected users can see their conversation"
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "Design a modern, user-friendly chat interface with a clean messaging aesthetic using warm, inviting colors like coral and teal, rounded message bubbles, and clear visual hierarchy for sender/receiver messages",
+      "id": "REQ-7",
+      "text": "Update the registration flow so that after a user registers and receives their unique code, they are automatically authenticated and can immediately start using the chat without additional login steps",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-user-code-requirements"
+        ],
+        "quotes": [
+          "only first time custmour need to register to get the code after getting the unique id they can chat promn any where"
         ]
       },
       "acceptanceCriteria": [
-        "Chat interface uses a cohesive color scheme with warm accent colors",
-        "Message bubbles are clearly distinguishable between sender and receiver",
-        "Interface is responsive and works on different screen sizes",
-        "Typography is legible and user-friendly"
+        "After registration, users are immediately logged in",
+        "Users can access chat functionality without a second login step",
+        "The unique code is stored locally for future sessions"
       ]
     },
     {
-      "id": "REQ-5",
-      "text": "Display the user's own unique code prominently in the interface so they can share it with others",
+      "id": "REQ-8",
+      "text": "Create a simplified login page where returning users can enter their unique code to authenticate and access the chat from any device without requiring Internet Identity or password",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-user-code-requirements"
+        ],
+        "quotes": [
+          "using any device there will not be any second varification to start the chart by entering the unique id . just enter unoique id and start chart"
         ]
       },
       "acceptanceCriteria": [
-        "User's unique code is visible in the main interface",
-        "Code can be easily copied for sharing",
-        "Code display is clearly labeled"
+        "Login page has a single input field for the unique code",
+        "Entering a valid code authenticates the user immediately",
+        "Works consistently across different devices and browsers",
+        "No Internet Identity or password prompt appears"
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "text": "Remove the Internet Identity authentication requirement from the Header, ConnectPage, and ChatPage components, replacing it with code-based authentication checks",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-code-requirements"
+        ],
+        "quotes": [
+          "just enter unoique id and start chart"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Users authenticated via unique code can access all chat features",
+        "Internet Identity login/logout UI is removed from the header",
+        "ConnectPage and ChatPage check for code-based authentication instead of Internet Identity",
+        "Navigation flow supports code-only authentication"
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "text": "Implement persistent code-based session storage so that users remain authenticated across page refreshes and browser restarts until they explicitly log out",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-code-requirements"
+        ],
+        "quotes": [
+          "after getting the unique id they can chat promn any where and using any device"
+        ]
+      },
+      "acceptanceCriteria": [
+        "User's unique code is stored in browser local storage",
+        "Authentication persists across page refreshes",
+        "User remains logged in after closing and reopening the browser",
+        "Session ends only when user explicitly logs out"
       ]
     }
   ],
   "constraints": [
-    "Use Internet Identity for user authentication instead of custom username/password system",
-    "Chat messages must be stored persistently in the backend",
-    "System must use polling for message updates since real-time WebSocket connections are not supported"
+    "Maintain the single-actor backend architecture",
+    "Keep the existing user registration system that generates unique numeric codes",
+    "Preserve the existing connection system and chat interface structure",
+    "Do not modify immutable frontend paths (useInternetIdentity hooks, main.tsx, components/ui)"
   ],
   "nonGoals": [
-    "Group chat functionality",
-    "Voice or video calling features",
-    "File or image sharing in chat",
-    "Push notifications",
-    "User profile customization beyond the unique code"
+    "Adding password-based authentication",
+    "Implementing two-factor authentication",
+    "Creating email verification flows",
+    "Supporting OAuth or social login providers",
+    "Adding biometric authentication"
   ],
   "imageRequirements": {
     "required": [],

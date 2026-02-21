@@ -1,11 +1,12 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 3,
-  "summary": "One-to-one chat website where users can connect using unique code numbers",
+  "projectStateVersion": 5,
+  "summary": "One-to-one chat website where users register once to get a unique code, then use that code to log in from any device without passwords or additional verification",
   "architectural_notes": [
     "WebSocket or similar real-time communication protocol needed for chat",
-    "User authentication system required",
-    "Database schema: users table with unique code field, messages table for chat history"
+    "Database schema: users table with unique code field, messages table for chat history",
+    "Code-only authentication system - no password storage needed",
+    "Session management to maintain login state across devices using unique code as identifier"
   ],
   "known_issues": [],
   "isFixRequest": false,
@@ -49,6 +50,30 @@
         "REQ-5"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-update-the-registration-flow-so-that-after-a-user-registers-and-receives-their-unique-code-they-are-automatically-authenticated-and-can-immediately-start-using-the-chat-without-additional-login-steps",
+      "title": "Update the registration flow so that after a user registers and receives their unique code, they are automatically authenticated and can immediately start using the chat without additional login steps",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-simplified-login-page-where-returning-users-can-enter-their-unique-code-to-authenticate-and-access-the-chat-from-any-device-without-requiring-internet-identity-or-password",
+      "title": "Create a simplified login page where returning users can enter their unique code to authenticate and access the chat from any device without requiring Internet Identity or password",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-the-internet-identity-authentication-requirement-from-the-header-connectpage-and-chatpage-components-replacing-it-with-code-based-authentication-checks",
+      "title": "Remove the Internet Identity authentication requirement from the Header, ConnectPage, and ChatPage components, replacing it with code-based authentication checks",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -77,6 +102,31 @@
       "summary": "Real-time one-to-one chat functionality",
       "reqIds": [
         "AR-3"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Simplified authentication: register once with unique code, then use code only (no password) to log in from any device",
+      "reqIds": [
+        "AR-1",
+        "AR-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Modify the backend to store user sessions that map unique codes to user identities, allowing users to authenticate by entering only their unique code without requiring Internet Identity login after initial registration",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Implement persistent code-based session storage so that users remain authenticated across page refreshes and browser restarts until they explicitly log out",
+      "reqIds": [
+        "REQ-10"
       ],
       "status": "pending"
     }

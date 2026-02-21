@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { useInternetIdentity } from '../hooks/useInternetIdentity';
-import { useRegisterUser } from '../hooks/useQueries';
+import { useCodeAuth } from '../hooks/useCodeAuth';
+import { useRegisterUser, useGetUserByCode } from '../hooks/useQueries';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -11,51 +11,44 @@ import { Copy, CheckCircle2 } from 'lucide-react';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
-  const { identity, login } = useInternetIdentity();
+  const { setAuth } = useCodeAuth();
   const registerMutation = useRegisterUser();
   const [displayName, setDisplayName] = useState('');
-  const [registeredCode, setRegisteredCode] = useState<bigint | null>(null);
+  const [registeredUserId, setRegisteredUserId] = useState<bigint | null>(null);
   const [copied, setCopied] = useState(false);
+
+  // Fetch user data to get the auth code
+  const { data: userData } = useGetUserByCode(registeredUserId);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!displayName.trim()) return;
 
     try {
-      const code = await registerMutation.mutateAsync(displayName.trim());
-      setRegisteredCode(code);
+      const userId = await registerMutation.mutateAsync(displayName.trim());
+      setRegisteredUserId(userId);
     } catch (error) {
       console.error('Registration failed:', error);
     }
   };
 
+  const handleContinue = () => {
+    if (registeredUserId !== null && userData?.authCode) {
+      // Automatically authenticate the user
+      setAuth(registeredUserId, userData.authCode);
+      navigate({ to: '/connect' });
+    }
+  };
+
   const handleCopyCode = () => {
-    if (registeredCode !== null) {
-      navigator.clipboard.writeText(registeredCode.toString());
+    if (userData?.authCode) {
+      navigator.clipboard.writeText(userData.authCode);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
   };
 
-  if (!identity) {
-    return (
-      <div className="container mx-auto flex min-h-[60vh] items-center justify-center px-4">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle>Login Required</CardTitle>
-            <CardDescription>Please login to register and get your unique code</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button onClick={login} className="w-full">
-              Login with Internet Identity
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  if (registeredCode !== null) {
+  if (registeredUserId !== null && userData) {
     return (
       <div className="container mx-auto flex min-h-[60vh] items-center justify-center px-4">
         <Card className="w-full max-w-md border-2 border-coral/20 shadow-lg">
@@ -66,13 +59,13 @@ export default function RegisterPage() {
               </div>
             </div>
             <CardTitle className="text-2xl">Registration Successful!</CardTitle>
-            <CardDescription>Your unique code is ready to share</CardDescription>
+            <CardDescription>Your unique code is ready to use</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="rounded-xl bg-gradient-to-br from-coral/10 to-teal/10 p-6 text-center">
               <p className="mb-2 text-sm font-medium text-muted-foreground">Your Unique Code</p>
               <p className="mb-4 text-5xl font-bold tracking-tight text-foreground">
-                {registeredCode.toString()}
+                {userData.authCode}
               </p>
               <Button
                 variant="outline"
@@ -96,25 +89,16 @@ export default function RegisterPage() {
 
             <Alert>
               <AlertDescription>
-                Share this code with anyone you want to connect with. Keep it safe!
+                Save this code! You'll use it to log in from any device. Share it with people you want to connect with.
               </AlertDescription>
             </Alert>
 
-            <div className="flex gap-3">
-              <Button
-                variant="outline"
-                onClick={() => navigate({ to: '/connect' })}
-                className="flex-1"
-              >
-                Connect with Someone
-              </Button>
-              <Button
-                onClick={() => navigate({ to: '/chat' })}
-                className="flex-1 bg-gradient-to-r from-coral to-teal text-white"
-              >
-                Go to Chat
-              </Button>
-            </div>
+            <Button
+              onClick={handleContinue}
+              className="w-full bg-gradient-to-r from-coral to-teal text-white"
+            >
+              Continue to Chat
+            </Button>
           </CardContent>
         </Card>
       </div>
@@ -158,6 +142,19 @@ export default function RegisterPage() {
             >
               {registerMutation.isPending ? 'Registering...' : 'Get My Code'}
             </Button>
+
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground">
+                Already have a code?{' '}
+                <button
+                  type="button"
+                  onClick={() => navigate({ to: '/login' })}
+                  className="font-medium text-teal hover:underline"
+                >
+                  Login here
+                </button>
+              </p>
+            </div>
           </form>
         </CardContent>
       </Card>

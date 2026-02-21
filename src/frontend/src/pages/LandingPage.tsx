@@ -1,17 +1,17 @@
 import { useNavigate } from '@tanstack/react-router';
-import { useInternetIdentity } from '../hooks/useInternetIdentity';
+import { useCodeAuth } from '../hooks/useCodeAuth';
 import { Button } from '@/components/ui/button';
 import { MessageCircle, Users, Lock } from 'lucide-react';
 
 export default function LandingPage() {
   const navigate = useNavigate();
-  const { identity, login, loginStatus } = useInternetIdentity();
+  const { isAuthenticated } = useCodeAuth();
 
   const handleGetStarted = () => {
-    if (identity) {
-      navigate({ to: '/register' });
+    if (isAuthenticated) {
+      navigate({ to: '/connect' });
     } else {
-      login();
+      navigate({ to: '/login' });
     }
   };
 
@@ -39,10 +39,9 @@ export default function LandingPage() {
         <Button
           size="lg"
           onClick={handleGetStarted}
-          disabled={loginStatus === 'logging-in'}
           className="h-14 rounded-full bg-gradient-to-r from-coral to-teal px-8 text-lg font-semibold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"
         >
-          {loginStatus === 'logging-in' ? 'Connecting...' : identity ? 'Get Started' : 'Login to Get Started'}
+          {isAuthenticated ? 'Go to Chat' : 'Get Started'}
         </Button>
 
         <div className="mt-20 grid gap-8 md:grid-cols-3">
@@ -52,9 +51,9 @@ export default function LandingPage() {
                 <Users className="h-8 w-8 text-coral" />
               </div>
             </div>
-            <h3 className="mb-2 text-lg font-semibold">Unique Code System</h3>
-            <p className="text-sm text-muted-foreground">
-              Every user gets a unique numeric code. Share it with anyone you want to connect with.
+            <h3 className="mb-2 text-xl font-semibold">Simple Registration</h3>
+            <p className="text-muted-foreground">
+              Register once, get your unique code, and you're ready to connect from any device.
             </p>
           </div>
 
@@ -64,9 +63,9 @@ export default function LandingPage() {
                 <MessageCircle className="h-8 w-8 text-teal" />
               </div>
             </div>
-            <h3 className="mb-2 text-lg font-semibold">One-to-One Chat</h3>
-            <p className="text-sm text-muted-foreground">
-              Private conversations between two people. No groups, no distractions.
+            <h3 className="mb-2 text-xl font-semibold">One-to-One Chats</h3>
+            <p className="text-muted-foreground">
+              Exchange codes with someone and start a private conversation instantly.
             </p>
           </div>
 
@@ -76,9 +75,9 @@ export default function LandingPage() {
                 <Lock className="h-8 w-8 text-coral" />
               </div>
             </div>
-            <h3 className="mb-2 text-lg font-semibold">Secure & Private</h3>
-            <p className="text-sm text-muted-foreground">
-              Built on Internet Computer with end-to-end security for your conversations.
+            <h3 className="mb-2 text-xl font-semibold">Secure & Private</h3>
+            <p className="text-muted-foreground">
+              Your conversations are private and secure, accessible only with your unique code.
             </p>
           </div>
         </div>

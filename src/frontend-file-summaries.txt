@@ -1,12 +1,15 @@
 {
-  "frontend/src/App.tsx": "Main application component with TanStack Router setup, defining routes for landing, register, connect, and chat pages with a shared layout including header and footer.",
-  "frontend/src/hooks/useQueries.ts": "React Query hooks for backend operations including user registration, connection establishment, fetching all users, and checking connection status.",
-  "frontend/src/pages/LandingPage.tsx": "Landing page with hero section showcasing the app's unique code-based chat system, featuring three benefit cards and a call-to-action button.",
-  "frontend/src/pages/RegisterPage.tsx": "User registration page that collects display name, calls backend to generate unique code, and displays the code with copy functionality upon successful registration.",
-  "frontend/src/pages/ConnectPage.tsx": "Connection page allowing users to enter their own code and a target user's code to establish a one-to-one connection.",
-  "frontend/src/pages/ChatPage.tsx": "Chat page placeholder that explains the messaging functionality requires additional backend methods for sending and retrieving messages.",
-  "frontend/src/components/Header.tsx": "Application header with logo, navigation links (Register, Connect, Chat), and login/logout functionality using Internet Identity.",
+  "frontend/src/App.tsx": "Main application component with TanStack Router setup, defining routes for landing, register, login, connect, and chat pages with a shared layout including header and footer.",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for backend operations including user registration, connection establishment, fetching all users, checking connection status, and fetching user data by code for displaying auth codes after registration.",
+  "frontend/src/pages/LandingPage.tsx": "Landing page with hero section showcasing the code-based chat system, featuring three benefit cards and a call-to-action button that navigates to login or connect based on authentication status.",
+  "frontend/src/pages/RegisterPage.tsx": "User registration page that collects display name, generates unique code via backend, displays the code with copy functionality, and automatically authenticates users by storing their credentials in local storage before redirecting to connect page.",
+  "frontend/src/pages/ConnectPage.tsx": "Connection page allowing authenticated users to enter a target user's code to establish one-to-one connections, with authentication check that redirects to login if not authenticated.",
+  "frontend/src/pages/ChatPage.tsx": "Chat page placeholder with authentication check that redirects to login if not authenticated, explaining that messaging functionality requires additional backend methods.",
+  "frontend/src/components/Header.tsx": "Application header with logo, navigation links (Connect, Chat), code display badge for authenticated users, and login/logout functionality using code-based authentication instead of Internet Identity.",
   "frontend/src/components/Footer.tsx": "Application footer with copyright, caffeine.ai attribution with UTM tracking, and social media links.",
   "frontend/src/index.css": "Global styles with OKLCH color system including custom coral and teal color tokens for the warm, inviting chat aesthetic.",
-  "frontend/tailwind.config.js": "Tailwind configuration extended with coral and teal colors, custom border radius values, Inter font family, and additional shadow utilities."
+  "frontend/tailwind.config.js": "Tailwind configuration extended with coral and teal colors, custom border radius values, Inter font family, and additional shadow utilities.",
+  "frontend/src/hooks/useCodeAuth.tsx": "React context provider and hook for code-based authentication that manages login state, stores/retrieves unique codes from local storage, and provides login/logout/setAuth functions with persistent session support.",
+  "frontend/src/pages/LoginPage.tsx": "Login page with a single input field for entering unique codes, validates codes via backend authenticateWithCode method, stores authenticated user in local storage, and redirects to connect page on success.",
+  "frontend/src/main.tsx": "Application entry point that wraps the app with QueryClientProvider and CodeAuthProvider to enable React Query and code-based authentication throughout the application."
 }

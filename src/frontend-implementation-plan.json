@@ -1,132 +1,102 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Create one-to-one chat website with unique code-based connections",
+  "title": "Implement code-only authentication system with persistent login",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "Create a user registration system that generates a unique numeric code for each user upon signup",
+      "id": "REQ-7",
+      "summary": "Update registration flow to automatically authenticate users after receiving their unique code",
       "acceptanceCriteria": [
-        "Each user receives a unique numeric code upon registration",
-        "Code is displayed to the user after successful registration",
-        "Code can be used to identify and connect with the user"
+        "After registration, users are immediately logged in",
+        "Users can access chat functionality without a second login step",
+        "The unique code is stored locally for future sessions"
       ],
       "file_operations": [
         {
           "path": "frontend/src/pages/RegisterPage.tsx",
-          "operation": "create",
-          "description": "Create registration page that calls the backend registerUser method with a display name and shows the generated unique numeric code to the user after successful registration."
+          "operation": "modify",
+          "description": "After successful user registration, automatically authenticate the user by storing their unique code and user ID in local storage, then redirect to the chat page without requiring additional login steps"
         },
         {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Add route for /register that renders RegisterPage and wire it into the app routing structure."
+          "path": "frontend/src/hooks/useCodeAuth.ts",
+          "operation": "create",
+          "description": "Create a React context provider and hook for code-based authentication that manages login state, stores/retrieves the unique code from local storage, and provides login/logout functions"
         }
       ]
     },
     {
-      "id": "REQ-2",
-      "summary": "Implement a connection system where users can find and connect with other users by entering their unique code number",
+      "id": "REQ-8",
+      "summary": "Create simplified login page for returning users to authenticate with their unique code",
       "acceptanceCriteria": [
-        "Users can enter another user's code to initiate a connection",
-        "System validates the entered code exists",
-        "Connection is established only between two specific users"
+        "Login page has a single input field for the unique code",
+        "Entering a valid code authenticates the user immediately",
+        "Works consistently across different devices and browsers",
+        "No Internet Identity or password prompt appears"
       ],
       "file_operations": [
+        {
+          "path": "frontend/src/pages/LoginPage.tsx",
+          "operation": "create",
+          "description": "Create a login page with a single input field for entering the unique code, validate the code by calling the backend authenticateWithCode method, and store the authenticated user ID in local storage upon success"
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add a new /login route that renders the LoginPage component, and wire it into the router configuration alongside existing routes"
+        }
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "summary": "Remove Internet Identity authentication and replace with code-based authentication checks",
+      "acceptanceCriteria": [
+        "Users authenticated via unique code can access all chat features",
+        "Internet Identity login/logout UI is removed from the header",
+        "ConnectPage and ChatPage check for code-based authentication instead of Internet Identity",
+        "Navigation flow supports code-only authentication"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/Header.tsx",
+          "operation": "modify",
+          "description": "Replace Internet Identity login/logout UI with code-based authentication status display, showing the user's logged-in state and providing a logout button that clears local storage"
+        },
         {
           "path": "frontend/src/pages/ConnectPage.tsx",
-          "operation": "create",
-          "description": "Create connection page with an input field for entering a target user's unique code and a connect button that calls the backend connectUsers method to establish the connection between the current user and the target user."
-        },
-        {
-          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Add route for /connect that renders ConnectPage and wire it into the app routing structure."
-        }
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "summary": "Build a one-to-one chat interface where connected users can send and receive text messages in real-time",
-      "acceptanceCriteria": [
-        "Users can send text messages to their connected partner",
-        "Messages appear in a conversation thread format",
-        "Chat history is preserved and retrievable",
-        "Only the two connected users can see their conversation"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/ChatPage.tsx",
-          "operation": "create",
-          "description": "Create chat page with a message list display area showing conversation history, a text input field for composing messages, and a send button. Implement polling to fetch new messages periodically from the backend and display them in conversation thread format."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Add route for /chat that renders ChatPage and wire it into the app routing structure."
-        },
-        {
-          "path": "frontend/src/components/MessageBubble.tsx",
-          "operation": "create",
-          "description": "Create a reusable message bubble component that displays individual messages with visual distinction between sent and received messages, including timestamp and sender information."
-        }
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "summary": "Design a modern, user-friendly chat interface with a clean messaging aesthetic using warm, inviting colors like coral and teal, rounded message bubbles, and clear visual hierarchy for sender/receiver messages",
-      "acceptanceCriteria": [
-        "Chat interface uses a cohesive color scheme with warm accent colors",
-        "Message bubbles are clearly distinguishable between sender and receiver",
-        "Interface is responsive and works on different screen sizes",
-        "Typography is legible and user-friendly"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/index.css",
-          "operation": "modify",
-          "description": "Add CSS custom properties for coral and teal accent colors, define global typography styles for legibility, and establish consistent spacing and border-radius values for rounded message bubbles."
-        },
-        {
-          "path": "frontend/tailwind.config.js",
-          "operation": "modify",
-          "description": "Extend Tailwind theme with custom coral and teal color palette, configure responsive breakpoints, and define spacing utilities for the chat interface design system."
-        },
-        {
-          "path": "frontend/src/components/MessageBubble.tsx",
-          "operation": "modify",
-          "description": "Apply warm color scheme with coral for sent messages and teal for received messages, implement rounded bubble styling, and ensure responsive layout with clear visual hierarchy."
+          "description": "Replace Internet Identity authentication check with code-based authentication check using the useCodeAuth hook, redirecting unauthenticated users to the login page"
         },
         {
           "path": "frontend/src/pages/ChatPage.tsx",
           "operation": "modify",
-          "description": "Apply cohesive design system with warm colors, ensure responsive layout for different screen sizes, and implement clear visual hierarchy for the chat interface."
+          "description": "Replace Internet Identity authentication check with code-based authentication check using the useCodeAuth hook, redirecting unauthenticated users to the login page"
+        },
+        {
+          "path": "frontend/src/pages/LandingPage.tsx",
+          "operation": "modify",
+          "description": "Update the call-to-action button to navigate authenticated users to the connect page and unauthenticated users to the login page, removing Internet Identity login trigger"
         }
       ]
     },
     {
-      "id": "REQ-5",
-      "summary": "Display the user's own unique code prominently in the interface so they can share it with others",
+      "id": "REQ-10",
+      "summary": "Implement persistent code-based session storage across page refreshes and browser restarts",
       "acceptanceCriteria": [
-        "User's unique code is visible in the main interface",
-        "Code can be easily copied for sharing",
-        "Code display is clearly labeled"
+        "User's unique code is stored in browser local storage",
+        "Authentication persists across page refreshes",
+        "User remains logged in after closing and reopening the browser",
+        "Session ends only when user explicitly logs out"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/UserCodeDisplay.tsx",
-          "operation": "create",
-          "description": "Create a component that prominently displays the user's unique numeric code with a clear label and includes a copy-to-clipboard button for easy sharing."
+          "path": "frontend/src/hooks/useCodeAuth.ts",
+          "operation": "modify",
+          "description": "Implement automatic session restoration on initialization by checking local storage for stored authentication data, and provide a logout function that clears local storage to end the session"
         },
         {
-          "path": "frontend/src/pages/ChatPage.tsx",
+          "path": "frontend/src/main.tsx",
           "operation": "modify",
-          "description": "Integrate UserCodeDisplay component into the chat page header or sidebar so the user's code is always visible during chat sessions."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Add UserCodeDisplay component to the main app layout or navigation area to ensure the user's code is accessible from any page in the application."
+          "description": "Wrap the app with the CodeAuthProvider so that code-based authentication state is available throughout the application and persists across page loads"
         }
       ]
     }

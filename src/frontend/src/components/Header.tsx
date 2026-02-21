@@ -1,11 +1,16 @@
 import { useNavigate } from '@tanstack/react-router';
-import { useInternetIdentity } from '../hooks/useInternetIdentity';
+import { useCodeAuth } from '../hooks/useCodeAuth';
 import { Button } from '@/components/ui/button';
 import { MessageCircle, LogOut } from 'lucide-react';
 
 export default function Header() {
   const navigate = useNavigate();
-  const { identity, login, clear, loginStatus } = useInternetIdentity();
+  const { isAuthenticated, logout, authCode } = useCodeAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate({ to: '/' });
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -21,14 +26,8 @@ export default function Header() {
         </button>
 
         <nav className="flex items-center gap-4">
-          {identity ? (
+          {isAuthenticated ? (
             <>
-              <Button
-                variant="ghost"
-                onClick={() => navigate({ to: '/register' })}
-              >
-                Register
-              </Button>
               <Button
                 variant="ghost"
                 onClick={() => navigate({ to: '/connect' })}
@@ -41,10 +40,14 @@ export default function Header() {
               >
                 Chat
               </Button>
+              <div className="hidden items-center gap-2 rounded-lg border border-border bg-muted px-3 py-1.5 text-sm md:flex">
+                <span className="text-muted-foreground">Code:</span>
+                <span className="font-mono font-semibold">{authCode}</span>
+              </div>
               <Button
                 variant="outline"
                 size="sm"
-                onClick={clear}
+                onClick={handleLogout}
                 className="gap-2"
               >
                 <LogOut className="h-4 w-4" />
@@ -52,13 +55,20 @@ export default function Header() {
               </Button>
             </>
           ) : (
-            <Button
-              onClick={login}
-              disabled={loginStatus === 'logging-in'}
-              className="bg-gradient-to-r from-coral to-teal text-white"
-            >
-              {loginStatus === 'logging-in' ? 'Connecting...' : 'Login'}
-            </Button>
+            <>
+              <Button
+                variant="ghost"
+                onClick={() => navigate({ to: '/login' })}
+              >
+                Login
+              </Button>
+              <Button
+                onClick={() => navigate({ to: '/register' })}
+                className="bg-gradient-to-r from-coral to-teal text-white"
+              >
+                Register
+              </Button>
+            </>
           )}
         </nav>
       </div>

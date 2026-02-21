@@ -1,28 +1,18 @@
-import { useInternetIdentity } from '../hooks/useInternetIdentity';
+import { useNavigate } from '@tanstack/react-router';
+import { useCodeAuth } from '../hooks/useCodeAuth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { MessageCircle, AlertCircle } from 'lucide-react';
 
 export default function ChatPage() {
-  const { identity, login } = useInternetIdentity();
+  const navigate = useNavigate();
+  const { isAuthenticated } = useCodeAuth();
 
-  if (!identity) {
-    return (
-      <div className="container mx-auto flex min-h-[60vh] items-center justify-center px-4">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle>Login Required</CardTitle>
-            <CardDescription>Please login to access the chat</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button onClick={login} className="w-full">
-              Login with Internet Identity
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
+  // Redirect to login if not authenticated
+  if (!isAuthenticated) {
+    navigate({ to: '/login' });
+    return null;
   }
 
   return (
@@ -69,7 +59,7 @@ export default function ChatPage() {
           </div>
 
           <div className="pt-4 text-center text-sm text-muted-foreground">
-            <p>In the meantime, you can register and connect with other users.</p>
+            <p>In the meantime, you can connect with other users.</p>
           </div>
         </CardContent>
       </Card>

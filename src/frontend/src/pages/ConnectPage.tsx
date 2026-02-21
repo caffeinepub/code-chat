@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { useInternetIdentity } from '../hooks/useInternetIdentity';
+import { useCodeAuth } from '../hooks/useCodeAuth';
 import { useConnectUsers, useGetAllUsers } from '../hooks/useQueries';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,45 +11,31 @@ import { Users, CheckCircle2 } from 'lucide-react';
 
 export default function ConnectPage() {
   const navigate = useNavigate();
-  const { identity, login } = useInternetIdentity();
+  const { isAuthenticated, userId } = useCodeAuth();
   const connectMutation = useConnectUsers();
   const { data: users } = useGetAllUsers();
-  const [myCode, setMyCode] = useState('');
   const [targetCode, setTargetCode] = useState('');
   const [connected, setConnected] = useState(false);
 
+  // Redirect to login if not authenticated
+  if (!isAuthenticated) {
+    navigate({ to: '/login' });
+    return null;
+  }
+
   const handleConnect = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!myCode.trim() || !targetCode.trim()) return;
+    if (!targetCode.trim() || userId === null) return;
 
     try {
-      const myId = BigInt(myCode);
       const targetId = BigInt(targetCode);
       
-      await connectMutation.mutateAsync({ myId, targetId });
+      await connectMutation.mutateAsync({ myId: userId, targetId });
       setConnected(true);
     } catch (error) {
       console.error('Connection failed:', error);
     }
   };
-
-  if (!identity) {
-    return (
-      <div className="container mx-auto flex min-h-[60vh] items-center justify-center px-4">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle>Login Required</CardTitle>
-            <CardDescription>Please login to connect with others</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button onClick={login} className="w-full">
-              Login with Internet Identity
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   if (connected) {
     return (
@@ -94,23 +80,10 @@ export default function ConnectPage() {
             </div>
           </div>
           <CardTitle>Connect with Someone</CardTitle>
-          <CardDescription>Enter your code and the code of the person you want to chat with</CardDescription>
+          <CardDescription>Enter the code of the person you want to chat with</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleConnect} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="myCode">Your Code</Label>
-              <Input
-                id="myCode"
-                type="text"
-                placeholder="Enter your unique code"
-                value={myCode}
-                onChange={(e) => setMyCode(e.target.value)}
-                required
-                disabled={connectMutation.isPending}
-              />
-            </div>
-
             <div className="space-y-2">
               <Label htmlFor="targetCode">Their Code</Label>
               <Input
@@ -127,7 +100,7 @@ export default function ConnectPage() {
             {connectMutation.isError && (
               <Alert variant="destructive">
                 <AlertDescription>
-                  Connection failed. Please check the codes and try again.
+                  Connection failed. Please check the code and try again.
                 </AlertDescription>
               </Alert>
             )}
@@ -135,7 +108,7 @@ export default function ConnectPage() {
             <Button
               type="submit"
               className="w-full bg-gradient-to-r from-coral to-teal text-white"
-              disabled={connectMutation.isPending || !myCode.trim() || !targetCode.trim()}
+              disabled={connectMutation.isPending || !targetCode.trim()}
             >
               {connectMutation.isPending ? 'Connecting...' : 'Connect'}
             </Button>

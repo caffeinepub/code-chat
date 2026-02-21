@@ -57,3 +57,21 @@ export function useIsConnected(userId1: bigint | null, userId2: bigint | null) {
     enabled: !!actor && !isFetching && userId1 !== null && userId2 !== null,
   });
 }
+
+export function useGetUserByCode(userId: bigint | null) {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<User | undefined>({
+    queryKey: ['user', userId?.toString()],
+    queryFn: async () => {
+      if (!actor || userId === null) return undefined;
+      const users = await actor.getAllUsers();
+      return users.find((user) => {
+        // Match by authCode which is generated from userId
+        const codeFromUserId = (100000 + Number(userId)).toString();
+        return user.authCode === codeFromUserId;
+      });
+    },
+    enabled: !!actor && !isFetching && userId !== null,
+  });
+}

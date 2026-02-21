@@ -91,9 +91,11 @@ export class ExternalBlob {
 }
 export interface User {
     principal: Principal;
+    authCode: string;
     displayName: string;
 }
 export interface backendInterface {
+    authenticateWithCode(code: string): Promise<bigint>;
     connectUsers(myId: bigint, targetId: bigint): Promise<void>;
     getAllUsers(): Promise<Array<User>>;
     isConnected(userId1: bigint, userId2: bigint): Promise<boolean>;
@@ -101,6 +103,20 @@ export interface backendInterface {
 }
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
+    async authenticateWithCode(arg0: string): Promise<bigint> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.authenticateWithCode(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.authenticateWithCode(arg0);
+            return result;
+        }
+    }
     async connectUsers(arg0: bigint, arg1: bigint): Promise<void> {
         if (this.processError) {
             try {

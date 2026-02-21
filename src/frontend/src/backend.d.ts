@@ -9,9 +9,11 @@ export interface None {
 export type Option<T> = Some<T> | None;
 export interface User {
     principal: Principal;
+    authCode: string;
     displayName: string;
 }
 export interface backendInterface {
+    authenticateWithCode(code: string): Promise<bigint>;
     connectUsers(myId: bigint, targetId: bigint): Promise<void>;
     getAllUsers(): Promise<Array<User>>;
     isConnected(userId1: bigint, userId2: bigint): Promise<boolean>;

@@ -1,13 +1,14 @@
 # Specification
 
 ## Summary
-**Goal:** Build a one-to-one chat website where users connect via unique numeric codes and have private conversations.
+**Goal:** Implement code-only authentication system that allows users to log in using just their unique numeric code, removing the Internet Identity requirement.
 
 **Planned changes:**
-- Create user registration with Internet Identity that generates a unique numeric code for each user
-- Implement a connection system where users can find others by entering their unique code
-- Build a real-time one-to-one chat interface with message history
-- Design a modern chat UI with coral and teal color scheme, rounded message bubbles, and clear visual distinction between sent/received messages
-- Display the user's own unique code prominently for easy sharing
+- Store user sessions in backend that map unique codes to user identities
+- Auto-authenticate users immediately after registration with their unique code
+- Create simplified login page with single code input field
+- Remove Internet Identity authentication from Header, ConnectPage, and ChatPage
+- Implement persistent session storage using browser local storage
+- Enable cross-device authentication using the same unique code
 
-**User-visible outcome:** Users can register, receive a unique code, connect with others by entering their code, and have private text conversations in a modern chat interface.
+**User-visible outcome:** Users can register once to receive a unique code, then log in from any device by simply entering that code. No password, Internet Identity, or additional verification required. Sessions persist across browser restarts until explicit logout.

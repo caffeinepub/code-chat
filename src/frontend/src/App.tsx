@@ -1,6 +1,6 @@
 import { createRouter, RouterProvider, createRoute, createRootRoute, Outlet } from '@tanstack/react-router';
-import { useInternetIdentity } from './hooks/useInternetIdentity';
 import RegisterPage from './pages/RegisterPage';
+import LoginPage from './pages/LoginPage';
 import ConnectPage from './pages/ConnectPage';
 import ChatPage from './pages/ChatPage';
 import LandingPage from './pages/LandingPage';
@@ -35,6 +35,12 @@ const registerRoute = createRoute({
   component: RegisterPage,
 });
 
+const loginRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/login',
+  component: LoginPage,
+});
+
 const connectRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/connect',
@@ -47,7 +53,7 @@ const chatRoute = createRoute({
   component: ChatPage,
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, registerRoute, connectRoute, chatRoute]);
+const routeTree = rootRoute.addChildren([indexRoute, registerRoute, loginRoute, connectRoute, chatRoute]);
 
 const router = createRouter({ routeTree });
 
