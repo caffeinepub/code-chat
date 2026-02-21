@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-registration-flow-so-that-after-a-user-registers-and-receives-their-unique-code-they-are-automatically-authenticated-and-can-immediately-start-using-the-chat-without-additional-login-steps",
-      "featureTitle": "Update the registration flow so that after a user registers and receives their unique code, they are automatically authenticated and can immediately start using the chat without additional login steps",
+      "featureId": "feature-investigate-and-resolve-the-error-currently-preventing-the-application-from-functioning-properly-in-the-deployed-version-2",
+      "featureTitle": "Investigate and resolve the error currently preventing the application from functioning properly in the deployed Version 2",
       "files": [
-        "frontend/src/pages/RegisterPage.tsx"
+        "frontend/src/pages/ConnectPage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -15,47 +15,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-7"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-a-simplified-login-page-where-returning-users-can-enter-their-unique-code-to-authenticate-and-access-the-chat-from-any-device-without-requiring-internet-identity-or-password",
-      "featureTitle": "Create a simplified login page where returning users can enter their unique code to authenticate and access the chat from any device without requiring Internet Identity or password",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/pages/LoginPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-8"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-remove-the-internet-identity-authentication-requirement-from-the-header-connectpage-and-chatpage-components-replacing-it-with-code-based-authentication-checks",
-      "featureTitle": "Remove the Internet Identity authentication requirement from the Header, ConnectPage, and ChatPage components, replacing it with code-based authentication checks",
-      "files": [
-        "frontend/src/components/Header.tsx",
-        "frontend/src/pages/ChatPage.tsx",
-        "frontend/src/pages/ConnectPage.tsx",
-        "frontend/src/pages/LandingPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-9"
+        "REQ-1"
       ],
       "confidence": "high"
     }

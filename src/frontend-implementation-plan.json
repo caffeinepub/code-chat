@@ -1,102 +1,80 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Implement code-only authentication system with persistent login",
+  "title": "Fix deployment error in Version 2",
   "requirements": [
     {
-      "id": "REQ-7",
-      "summary": "Update registration flow to automatically authenticate users after receiving their unique code",
+      "id": "REQ-1",
+      "summary": "Investigate and resolve the error preventing the application from functioning properly in Version 2",
       "acceptanceCriteria": [
-        "After registration, users are immediately logged in",
-        "Users can access chat functionality without a second login step",
-        "The unique code is stored locally for future sessions"
+        "Application loads without errors in the browser console",
+        "Users can successfully register with a display name and receive a unique auth code",
+        "Users can log in using their unique auth code",
+        "No runtime errors appear when navigating between pages",
+        "All existing features (registration, login, connect, chat navigation) function as expected"
       ],
       "file_operations": [
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Review and fix any type mismatches or incorrect API calls related to the new backend interface (User type with authCode field). Ensure authenticateWithCode, registerUser, getAllUsers, connectUsers, and isConnected queries correctly handle the updated User structure with principal, authCode, and displayName fields."
+        },
+        {
+          "path": "frontend/src/hooks/useCodeAuth.tsx",
+          "operation": "modify",
+          "description": "Verify the authentication context correctly stores and retrieves the auth code from localStorage. Ensure login function properly calls authenticateWithCode backend method and handles the returned user ID. Fix any issues with session persistence or state management that could cause runtime errors."
+        },
         {
           "path": "frontend/src/pages/RegisterPage.tsx",
           "operation": "modify",
-          "description": "After successful user registration, automatically authenticate the user by storing their unique code and user ID in local storage, then redirect to the chat page without requiring additional login steps"
+          "description": "Check that registration flow correctly calls registerUser backend method and handles the returned auth code. Ensure the auth code is properly displayed and the automatic login after registration works without errors. Fix any UI state issues or error handling gaps."
         },
-        {
-          "path": "frontend/src/hooks/useCodeAuth.ts",
-          "operation": "create",
-          "description": "Create a React context provider and hook for code-based authentication that manages login state, stores/retrieves the unique code from local storage, and provides login/logout functions"
-        }
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "summary": "Create simplified login page for returning users to authenticate with their unique code",
-      "acceptanceCriteria": [
-        "Login page has a single input field for the unique code",
-        "Entering a valid code authenticates the user immediately",
-        "Works consistently across different devices and browsers",
-        "No Internet Identity or password prompt appears"
-      ],
-      "file_operations": [
         {
           "path": "frontend/src/pages/LoginPage.tsx",
-          "operation": "create",
-          "description": "Create a login page with a single input field for entering the unique code, validate the code by calling the backend authenticateWithCode method, and store the authenticated user ID in local storage upon success"
-        },
-        {
-          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Add a new /login route that renders the LoginPage component, and wire it into the router configuration alongside existing routes"
-        }
-      ]
-    },
-    {
-      "id": "REQ-9",
-      "summary": "Remove Internet Identity authentication and replace with code-based authentication checks",
-      "acceptanceCriteria": [
-        "Users authenticated via unique code can access all chat features",
-        "Internet Identity login/logout UI is removed from the header",
-        "ConnectPage and ChatPage check for code-based authentication instead of Internet Identity",
-        "Navigation flow supports code-only authentication"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/Header.tsx",
-          "operation": "modify",
-          "description": "Replace Internet Identity login/logout UI with code-based authentication status display, showing the user's logged-in state and providing a logout button that clears local storage"
+          "description": "Verify the login form correctly submits the auth code to the useCodeAuth login function. Ensure error messages display properly and navigation to the connect page works after successful authentication. Fix any form validation or error handling issues."
         },
         {
           "path": "frontend/src/pages/ConnectPage.tsx",
           "operation": "modify",
-          "description": "Replace Internet Identity authentication check with code-based authentication check using the useCodeAuth hook, redirecting unauthenticated users to the login page"
+          "description": "Review the connect flow to ensure it correctly fetches all users, filters by auth code, and calls connectUsers with proper user IDs. Fix any issues with the user lookup logic or connection establishment that could cause runtime errors."
         },
         {
-          "path": "frontend/src/pages/ChatPage.tsx",
+          "path": "frontend/src/components/Header.tsx",
           "operation": "modify",
-          "description": "Replace Internet Identity authentication check with code-based authentication check using the useCodeAuth hook, redirecting unauthenticated users to the login page"
+          "description": "Verify the auth code badge displays correctly when a user is authenticated. Ensure logout functionality properly clears the authentication state and redirects appropriately. Fix any rendering issues or navigation logic errors."
         },
         {
-          "path": "frontend/src/pages/LandingPage.tsx",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Update the call-to-action button to navigate authenticated users to the connect page and unauthenticated users to the login page, removing Internet Identity login trigger"
+          "description": "Review route protection logic to ensure protected routes (connect, chat) are only accessible when authenticated. Verify all route definitions are correct and navigation between pages works without errors. Fix any routing configuration issues or beforeLoad guards that could cause navigation failures."
         }
       ]
     },
     {
-      "id": "REQ-10",
-      "summary": "Implement persistent code-based session storage across page refreshes and browser restarts",
+      "id": "REQ-3",
+      "summary": "Ensure the code-based authentication flow works correctly with session persistence across page refreshes",
       "acceptanceCriteria": [
-        "User's unique code is stored in browser local storage",
-        "Authentication persists across page refreshes",
-        "User remains logged in after closing and reopening the browser",
-        "Session ends only when user explicitly logs out"
+        "Users remain logged in after refreshing the page",
+        "Auth code badge displays correctly in the header when authenticated",
+        "Logout functionality clears session and redirects appropriately",
+        "Protected routes (connect, chat) are accessible only when authenticated"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useCodeAuth.ts",
+          "path": "frontend/src/hooks/useCodeAuth.tsx",
           "operation": "modify",
-          "description": "Implement automatic session restoration on initialization by checking local storage for stored authentication data, and provide a logout function that clears local storage to end the session"
+          "description": "Ensure the authentication context initializes from localStorage on mount to restore sessions across page refreshes. Verify the logout function properly clears localStorage and resets authentication state. Implement proper error boundaries if session restoration fails."
         },
         {
-          "path": "frontend/src/main.tsx",
+          "path": "frontend/src/components/Header.tsx",
           "operation": "modify",
-          "description": "Wrap the app with the CodeAuthProvider so that code-based authentication state is available throughout the application and persists across page loads"
+          "description": "Verify the auth code badge correctly reads from the authentication context and displays the user's auth code when logged in. Ensure logout button triggers the context's logout function and navigates to the landing page. Fix any conditional rendering issues."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Implement or verify route guards that check authentication state before allowing access to protected routes (connect, chat). Ensure unauthenticated users are redirected to the login page. Verify the authentication context is properly consumed in route beforeLoad hooks."
         }
       ]
     }

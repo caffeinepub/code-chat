@@ -4,26 +4,13 @@ import Array "mo:core/Array";
 import Map "mo:core/Map";
 import Runtime "mo:core/Runtime";
 import Principal "mo:core/Principal";
-import Order "mo:core/Order";
 import Text "mo:core/Text";
-import Migration "migration";
 
-(with migration = Migration.run)
 actor {
   type User = {
     principal : Principal;
     displayName : Text;
     authCode : Text;
-  };
-
-  module User {
-    public func compare(user1 : User, user2 : User) : Order.Order {
-      compareByDisplayName(user1, user2);
-    };
-
-    func compareByDisplayName(user1 : User, user2 : User) : Order.Order {
-      Text.compare(user1.displayName, user2.displayName);
-    };
   };
 
   func generateRandomCode(userId : Nat) : Text {
@@ -80,4 +67,3 @@ actor {
     };
   };
 };
-

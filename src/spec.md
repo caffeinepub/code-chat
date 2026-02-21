@@ -1,14 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Implement code-only authentication system that allows users to log in using just their unique numeric code, removing the Internet Identity requirement.
+**Goal:** Fix the deployment error in Version 2 to restore full application functionality.
 
 **Planned changes:**
-- Store user sessions in backend that map unique codes to user identities
-- Auto-authenticate users immediately after registration with their unique code
-- Create simplified login page with single code input field
-- Remove Internet Identity authentication from Header, ConnectPage, and ChatPage
-- Implement persistent session storage using browser local storage
-- Enable cross-device authentication using the same unique code
+- Investigate and resolve runtime errors preventing the application from loading or functioning properly
+- Verify migration logic correctly transforms old user data to the new authCode-based structure
+- Ensure code-based authentication flow works correctly (login, logout, session persistence)
+- Validate that all existing features (registration, login, connect, chat navigation) function without errors
 
-**User-visible outcome:** Users can register once to receive a unique code, then log in from any device by simply entering that code. No password, Internet Identity, or additional verification required. Sessions persist across browser restarts until explicit logout.
+**User-visible outcome:** Users can register with a display name, receive and use their unique auth code to log in, and navigate the application without encountering errors.

@@ -16,6 +16,7 @@ export default function ConnectPage() {
   const { data: users } = useGetAllUsers();
   const [targetCode, setTargetCode] = useState('');
   const [connected, setConnected] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Redirect to login if not authenticated
   if (!isAuthenticated) {
@@ -27,13 +28,26 @@ export default function ConnectPage() {
     e.preventDefault();
     if (!targetCode.trim() || userId === null) return;
 
+    setError(null);
+
     try {
-      const targetId = BigInt(targetCode);
+      // Find the user by their auth code
+      const targetUser = users?.find(user => user.authCode === targetCode.trim());
       
-      await connectMutation.mutateAsync({ myId: userId, targetId });
+      if (!targetUser) {
+        setError('User not found. Please check the code and try again.');
+        return;
+      }
+
+      // Calculate the target user's ID from their auth code
+      // Auth code format: 100000 + userId
+      const targetUserId = BigInt(parseInt(targetUser.authCode) - 100000);
+      
+      await connectMutation.mutateAsync({ myId: userId, targetId: targetUserId });
       setConnected(true);
     } catch (error) {
       console.error('Connection failed:', error);
+      setError('Connection failed. Please try again.');
     }
   };
 
@@ -59,7 +73,11 @@ export default function ConnectPage() {
             </Button>
             <Button
               variant="outline"
-              onClick={() => setConnected(false)}
+              onClick={() => {
+                setConnected(false);
+                setTargetCode('');
+                setError(null);
+              }}
               className="w-full"
             >
               Connect with Another User
@@ -97,10 +115,10 @@ export default function ConnectPage() {
               />
             </div>
 
-            {connectMutation.isError && (
+            {(error || connectMutation.isError) && (
               <Alert variant="destructive">
                 <AlertDescription>
-                  Connection failed. Please check the code and try again.
+                  {error || 'Connection failed. Please check the code and try again.'}
                 </AlertDescription>
               </Alert>
             )}
